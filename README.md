@@ -1,6 +1,6 @@
-# 🎬 Cine Explorer
+# 🎬 Cine List
 
-Cine Explorer é um aplicativo iOS desenvolvido em SwiftUI que permite explorar filmes através da API do The Movie Database (TMDB).
+Cine List é um aplicativo iOS desenvolvido em SwiftUI que permite explorar filmes através da API do The Movie Database (TMDB).
 
 O projeto foi criado com o objetivo de consolidar conhecimentos em Swift e SwiftUI, aplicando conceitos modernos de desenvolvimento mobile como arquitetura MVVM, consumo de APIs REST, programação assíncrona com Async/Await, navegação entre telas, gerenciamento de estados e persistência local.
 

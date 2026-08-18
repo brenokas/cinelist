@@ -48,7 +48,7 @@ struct HomeView: View {
                                         .foregroundStyle(.primary)
                                     HStack(spacing:3){
                                         Image(systemName:"star.fill").foregroundStyle(.yellow)
-                                        Text(movie.vote_average.formatted(.number.precision(.fractionLength(1))))
+                                        Text((movie.vote_average/2).formatted(.number.precision(.fractionLength(1))))
                                     }
                                 }
                                 

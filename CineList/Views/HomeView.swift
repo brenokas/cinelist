@@ -12,6 +12,17 @@ struct HomeView: View {
     @State private var movies: [Movie] = []
     @State private var errorMessage = ""
     @State private var showError = false
+    @State private var searchText = ""
+    
+    private var filteredMovies: [Movie] {
+        if searchText.isEmpty {
+            return movies
+        }
+        
+        return movies.filter {
+            $0.title.lowercased().contains(searchText.lowercased())
+        }
+    }
     
     func loadMovies(_ page: Int) async {
         do {
@@ -27,7 +38,7 @@ struct HomeView: View {
         NavigationStack {
             List() {
                 Section("Popular Movies") {
-                    ForEach(movies, id: \.id) { movie in
+                    ForEach(filteredMovies, id: \.id) { movie in
                         NavigationLink {
                             MovieDetailView(movie: movie)
                         } label: {
@@ -59,6 +70,7 @@ struct HomeView: View {
                 }
             }
             .navigationTitle("CineList")
+            .searchable(text: $searchText, placement: .navigationBarDrawer)
         }
         .task {
             await loadMovies(1)

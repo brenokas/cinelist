@@ -80,16 +80,11 @@ struct MovieDetailView: View {
                 }
                 .padding(.bottom, 60)
                 
-                HStack {
-                    Text(movie.title)
-                        .font(.title)
-                        .bold()
-                        .padding(.top, 10)
-                    
-                    Image(systemName: "heart")
-                        
-                }
-                
+                Text(movie.title)
+                    .font(.title)
+                    .bold()
+                    .padding(.top, 10)
+
                 HStack (spacing: 30){
                     if let releaseDate = movie.release_date {
                         if releaseDate.isEmpty {
@@ -144,6 +139,35 @@ struct MovieDetailView: View {
                     .padding(.horizontal, 20)
                     .fixedSize(horizontal: false, vertical: true)
                 
+                Button {
+                    favoritesViewModel.isFavorite(movie)
+                    ? favoritesViewModel.removeFavorite(movie)
+                    : favoritesViewModel.addFavorite(movie)
+                } label: {
+                    HStack (spacing: 2) {
+                        if favoritesViewModel.isFavorite(movie) {
+                            Text("Added to favorites")
+                                .foregroundStyle(.background)
+                                .padding(10)
+                            Image(systemName: "heart.fill")
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 10)
+                        } else {
+                            Text("Add to favorites")
+                                .foregroundStyle(.background)
+                                .padding(10)
+                            Image(systemName: "heart")
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 10)
+                        }
+                    }
+                }
+                .background(
+                    favoritesViewModel.isFavorite(movie)
+                    ? .red
+                    : .gray)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                
             }
             .frame(maxWidth: .infinity)
         }
@@ -165,4 +189,5 @@ struct MovieDetailView: View {
         vote_average: 8.3,
         vote_count: 25000
     ))
+    .environmentObject(FavoritesViewModel())
 }

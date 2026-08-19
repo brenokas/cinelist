@@ -28,22 +28,39 @@ struct MovieDetailView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 10) {
-                GeometryReader { geometry in
-                    AsyncImage(
-                        url: URL(
-                            string: "https://image.tmdb.org/t/p/w1280\(movie.backdrop_path)"
-                        )
-                    ) { image in
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    } placeholder: {
-                        ProgressView()
+                ZStack {
+                    GeometryReader { geometry in
+                        AsyncImage(
+                            url: URL(
+                                string: "https://image.tmdb.org/t/p/w1280\(movie.backdrop_path)"
+                            )
+                        ) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        .frame(width: geometry.size.width, height: 300)
+                        .clipped()
                     }
-                    .frame(width: geometry.size.width, height: 300)
-                    .clipped()
+                    .frame(height: 300)
+                    
+                    AsyncImage(
+                        url: URL(string: "https://image.tmdb.org/t/p/w200\(movie.poster_path)")) {
+                            image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                        .frame(width: 100, height: 200)
+                        .shadow(radius: 5)
+                        .offset(y:130)
                 }
-                .frame(height: 300)
+                .padding(.bottom, 60)
                     
                 Text(movie.title)
                     .font(.title)

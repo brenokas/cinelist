@@ -35,7 +35,7 @@ struct MovieDetailView: View {
                         if let movieBackdrop = movie.backdrop_path {
                             AsyncImage(
                                 url: URL(
-                                    string: "https://image.tmdb.org/t/p/w1280\(movieBackdrop)"
+                                    string: "https://image.tmdb.org/t/p/w500\(movieBackdrop)"
                                 )
                             ) { image in
                                 image
@@ -167,6 +167,7 @@ struct MovieDetailView: View {
                     ? .red
                     : .gray)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                .animation(.smooth, value: 10)
                 
             }
             .frame(maxWidth: .infinity)

@@ -22,7 +22,7 @@ struct HomeView: View {
                             } label: {
                                 HStack {
                                     if let posterPath = movie.poster_path {
-                                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500\(posterPath)")) { image in
+                                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w200\(posterPath)")) { image in
                                             image.resizable()
                                                 .scaledToFit()
                                         } placeholder: {

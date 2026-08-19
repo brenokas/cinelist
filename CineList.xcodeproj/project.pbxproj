@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		337B1582303613DE00DACEE6 /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 337B1581303613DE00DACEE6 /* CachedAsyncImage */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		3367691930337C98005975F4 /* CineList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CineList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				337B1582303613DE00DACEE6 /* CachedAsyncImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = CineList;
 			packageProductDependencies = (
+				337B1581303613DE00DACEE6 /* CachedAsyncImage */,
 			);
 			productName = CineList;
 			productReference = 3367691930337C98005975F4 /* CineList.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = 3367691030337C98005975F4;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				337B1580303613DE00DACEE6 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3367691A30337C98005975F4 /* Products */;
 			projectDirPath = "";
@@ -332,6 +341,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		337B1580303613DE00DACEE6 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git";
+			requirement = {
+				kind = exactVersion;
+				version = 2.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		337B1581303613DE00DACEE6 /* CachedAsyncImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 337B1580303613DE00DACEE6 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
+			productName = CachedAsyncImage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3367691130337C98005975F4 /* Project object */;
 }

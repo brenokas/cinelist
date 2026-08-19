@@ -67,11 +67,28 @@ struct MovieDetailView: View {
                     .bold()
                     .padding(.top, 10)
                 
-                Text(formatDate(movie.release_date))
-                    .font(.subheadline)
-                    .foregroundStyle(Color(.secondaryLabel))
+                HStack (spacing: 30){
+                    Text(formatDate(movie.release_date))
+                        .font(.headline)
+                        .foregroundStyle(.primary)
                 
-                Text(movie.overview)
+                    HStack(spacing: 3){
+                        Image(systemName:"star.fill")
+                            .foregroundStyle(.yellow)
+                        
+                        Text((movie.vote_average/2)
+                            .formatted(.number.precision(.fractionLength(1))))
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+                        
+                        Text("(\(movie.vote_count))")
+                            .foregroundStyle(Color(.secondaryLabel))
+                            .textScale(.secondary)
+                        
+                    }
+                    
+                }
+                Text(movie.overview.isEmpty ? "Overview not available" : movie.overview)
                     .font(.body)
                     .foregroundStyle(Color(.secondaryLabel))
                     .multilineTextAlignment(.leading)
@@ -79,20 +96,6 @@ struct MovieDetailView: View {
                     .padding(.horizontal, 20)
                     .fixedSize(horizontal: false, vertical: true)
                 
-                HStack(spacing: 3){
-                    Image(systemName:"star.fill")
-                        .foregroundStyle(.yellow)
-                    
-                    Text((movie.vote_average/2)
-                        .formatted(.number.precision(.fractionLength(1))))
-                    .bold()
-                    
-                    Text("(\(movie.vote_count))")
-                        .foregroundStyle(Color(.secondaryLabel))
-                        .textScale(.secondary)
-                    
-                }
-                .padding(.bottom)
             }
             .frame(maxWidth: .infinity)
         }

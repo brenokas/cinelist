@@ -120,7 +120,7 @@ struct MovieDetailView: View {
                                 .foregroundStyle(Color(.secondaryLabel))
                                 .textScale(.secondary)
                         } else {
-                            Text("0,0")
+                            Text("(0)")
                                 .foregroundStyle(Color(.secondaryLabel))
                                 .textScale(.secondary)
                         }

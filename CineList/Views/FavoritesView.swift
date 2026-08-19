@@ -31,39 +31,45 @@ struct FavoritesView: View {
                 if favoritesViewModel.favorites.isEmpty {
                     ContentUnavailableView("No favorites yet",
                                            systemImage: "heart",
-                                           description: Text("Add a movie to see it here"))
+                                           description: Text("Add a movie to see it here"),
+                    )
                 } else {
                     LazyVGrid (columns: columns, spacing: 7){
                         ForEach(favoritesViewModel.favorites, id: \.id) { movie in
-                            if let posterPath = movie.poster_path {
-                                CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w200\(posterPath)"),
-                                                 urlCache: .imageCache) { phase in
-                                    switch phase {
-                                    case .empty:
-                                        ProgressView()
-                                    case .success(let image):
-                                        image.resizable()
-                                            .scaledToFill()
-                                    case .failure:
-                                        Image(systemName: "film")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .padding(25)
-                                            .foregroundStyle(.secondary)
-                                    @unknown default:
-                                        EmptyView()
+                            NavigationLink {
+                                MovieDetailView(movie: movie)
+                            } label: {
+                                if let posterPath = movie.poster_path {
+                                    CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w200\(posterPath)"),
+                                                     urlCache: .imageCache) { phase in
+                                        switch phase {
+                                        case .empty:
+                                            ProgressView()
+                                        case .success(let image):
+                                            image.resizable()
+                                                .scaledToFill()
+                                        case .failure:
+                                            Image(systemName: "film")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .padding(25)
+                                                .foregroundStyle(.secondary)
+                                        @unknown default:
+                                            EmptyView()
+                                        }
                                     }
+                                                     .frame(width: 100, height: 150)
+                                                     .clipped()
+                                                     .clipShape(RoundedRectangle(cornerRadius:5))
+                                                     .border(Color.gray, width: 0.5)
+                                } else {
+                                    Image(systemName: "film")
+                                        .frame(width: 100, height: 150)
+                                        .clipShape(RoundedRectangle(cornerRadius:5))
+                                        .border(Color.gray, width: 0.5)
                                 }
-                                                 .frame(width: 100, height: 150)
-                                                 .clipped()
-                                                 .clipShape(RoundedRectangle(cornerRadius:5))
-                                                 .border(Color.gray, width: 0.5)
-                            } else {
-                                Image(systemName: "film")
-                                    .frame(width: 100, height: 150)
-                                    .clipShape(RoundedRectangle(cornerRadius:5))
-                                    .border(Color.gray, width: 0.5)
                             }
+                            
                         }
                     }
             }

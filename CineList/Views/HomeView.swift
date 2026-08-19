@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CachedAsyncImage
 
 struct HomeView: View {
     @State private var searchText = ""
@@ -22,13 +23,29 @@ struct HomeView: View {
                             } label: {
                                 HStack {
                                     if let posterPath = movie.poster_path {
-                                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w200\(posterPath)")) { image in
-                                            image.resizable()
-                                                .scaledToFit()
-                                        } placeholder: {
-                                            ProgressView()
+                                        CachedAsyncImage(
+                                            url: URL(string: "https://image.tmdb.org/t/p/w200\(posterPath)"),
+                                            urlCache: .imageCache
+                                        ) { phase in
+                                            switch phase {
+                                            case .empty:
+                                                ProgressView()
+                                            case .success(let image):
+                                                image
+                                                    .resizable()
+                                                    .scaledToFill()
+                                            case .failure:
+                                                Image(systemName: "film")
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .padding(25)
+                                                    .foregroundStyle(.secondary)
+                                            @unknown default:
+                                                EmptyView()
+                                            }
                                         }
                                         .frame(width: 100, height: 150)
+                                        .clipped()
                                         .clipShape(RoundedRectangle(cornerRadius:5))
                                         .border(Color.gray, width: 0.5)
                                     } else {

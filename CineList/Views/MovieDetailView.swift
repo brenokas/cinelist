@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CachedAsyncImage
 
 struct MovieDetailView: View {
     let movie: Movie
@@ -33,16 +34,28 @@ struct MovieDetailView: View {
                 ZStack {
                     GeometryReader { geometry in
                         if let movieBackdrop = movie.backdrop_path {
-                            AsyncImage(
+                            CachedAsyncImage(
                                 url: URL(
                                     string: "https://image.tmdb.org/t/p/w500\(movieBackdrop)"
-                                )
-                            ) { image in
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                            } placeholder: {
-                                ProgressView()
+                                ),
+                                urlCache: .imageCache
+                            ) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView()
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                case .failure:
+                                    Image(systemName: "film")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .padding(25)
+                                        .foregroundStyle(.secondary)
+                                @unknown default:
+                                    EmptyView()
+                                }
                             }
                             .frame(width: geometry.size.width, height: 300)
                             .clipped()
@@ -56,15 +69,27 @@ struct MovieDetailView: View {
                     .frame(height: 300)
                     
                     if let moviePoster = movie.poster_path {
-                        AsyncImage(
-                            url: URL(string: "https://image.tmdb.org/t/p/w200\(moviePoster)")) {
-                                image in
+                        CachedAsyncImage(
+                            url: URL(string: "https://image.tmdb.org/t/p/w200\(moviePoster)"),
+                            urlCache: .imageCache
+                        ) { phase in
+                            switch phase {
+                            case .empty:
+                                ProgressView()
+                            case .success(let image):
                                 image
                                     .resizable()
                                     .scaledToFit()
-                            } placeholder: {
-                                ProgressView()
+                            case .failure:
+                                Image(systemName: "film")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .padding(25)
+                                    .foregroundStyle(.secondary)
+                            @unknown default:
+                                EmptyView()
                             }
+                        }
                             .clipShape(RoundedRectangle(cornerRadius: 6))
                             .frame(width: 100, height: 200)
                             .shadow(radius: 5)

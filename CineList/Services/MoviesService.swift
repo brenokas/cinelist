@@ -15,7 +15,28 @@ class MovieService {
         
         var request = URLRequest(url: url)
         request.setValue(
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOGU2YWU5OTZiNzU3OGJjNmE4NTBlNmIxNTZkMjQ3ZCIsIm5iZiI6MTc4NzA1NTc4Ny44ODgsInN1YiI6IjZhODQ0ZWFiOGI1NmMzYWJmZDU5NTk0YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.s-XF3cIvayLZEGJDhmv4xAXhAcm2IKETKaKTsqPq4vQ",
+            "Bearer \(ProcessInfo.processInfo.environment["API_KEY"]!)",
+            forHTTPHeaderField: "Authorization"
+        )
+        
+        let (data, _) = try await URLSession.shared.data(for: request)
+        
+        return try JSONDecoder().decode(MovieResponse.self, from: data)
+    }
+    
+    func searchMovies(_ movieName: String) async throws -> MovieResponse {
+        var components = URLComponents(string: "https://api.themoviedb.org/3/search/movie")!
+        components.queryItems = [
+            URLQueryItem(name: "query", value: movieName)
+        ]
+
+        guard let url = components.url else {
+            throw URLError(.badURL)
+        }
+        
+        var request = URLRequest(url: url)
+        request.setValue(
+            "Bearer \(ProcessInfo.processInfo.environment["API_KEY"]!)",
             forHTTPHeaderField: "Authorization"
         )
         

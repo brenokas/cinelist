@@ -21,10 +21,31 @@ class HomeViewModel: ObservableObject {
         isLoading = true
         do {
             let response = try await service.getMovies(page)
-            movies.append(contentsOf: response.results)
+            
+            if page == 1 {
+                movies = response.results
+            } else {
+                movies.append(contentsOf: response.results)
+            }
+            
         } catch {
             errorMessage = error.localizedDescription
             showError = true
+        }
+        
+        isLoading = false
+    }
+    
+    func searchMovies(_ query: String) async {
+        isLoading = true
+        
+        do {
+            let response = try await service.searchMovies(query)
+            movies = response.results
+        } catch {
+            errorMessage = error.localizedDescription
+            showError = true
+            print(error)
         }
         
         isLoading = false

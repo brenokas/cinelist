@@ -10,37 +10,33 @@ import SwiftUI
 struct HomeView: View {
     @State private var searchText = ""
     @StateObject private var viewModel = HomeViewModel()
-    
-    private var filteredMovies: [Movie] {
-        if searchText.isEmpty {
-            return viewModel.movies
-        }
-        
-        return viewModel.movies.filter { movie in
-            movie.title.localizedCaseInsensitiveContains(searchText)
-        }
-    }
-    
-    
+
     var body: some View {
         ZStack {
             NavigationStack {
                 List() {
                     Section("Popular Movies") {
-                        ForEach(filteredMovies, id: \.id) { movie in
+                        ForEach(viewModel.movies, id: \.id) { movie in
                             NavigationLink {
                                 MovieDetailView(movie: movie)
                             } label: {
                                 HStack {
-                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500\(movie.poster_path)")) { image in
-                                        image.resizable()
-                                            .scaledToFit()
-                                    } placeholder: {
-                                        ProgressView()
+                                    if let posterPath = movie.poster_path {
+                                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500\(posterPath)")) { image in
+                                            image.resizable()
+                                                .scaledToFit()
+                                        } placeholder: {
+                                            ProgressView()
+                                        }
+                                        .frame(width: 100, height: 150)
+                                        .clipShape(RoundedRectangle(cornerRadius:5))
+                                        .border(Color.gray, width: 0.5)
+                                    } else {
+                                        Image(systemName: "film")
+                                            .frame(width: 100, height: 150)
+                                            .clipShape(RoundedRectangle(cornerRadius:5))
+                                            .border(Color.gray, width: 0.5)
                                     }
-                                    .border(Color.gray, width: 0.5)
-                                    .frame(width: 100, height: 150)
-                                    .clipShape(RoundedRectangle(cornerRadius:5))
                                     
                                     VStack(alignment: .leading){
                                         Text(movie.title)
@@ -48,7 +44,14 @@ struct HomeView: View {
                                             .foregroundStyle(.primary)
                                         HStack(spacing:3){
                                             Image(systemName:"star.fill").foregroundStyle(.yellow)
-                                            Text((movie.vote_average/2).formatted(.number.precision(.fractionLength(1))))
+                                            
+                                            if let voteAverage = movie.vote_average {
+                                                Text((voteAverage/2)
+                                                    .formatted(.number.precision(.fractionLength(1))))
+                                            } else {
+                                                Text("(0)")
+                                            }
+                                            
                                         }
                                     }
                                     
@@ -60,6 +63,16 @@ struct HomeView: View {
                 }
                 .navigationTitle("CineList")
                 .searchable(text: $searchText, placement: .navigationBarDrawer)
+            }
+            .onChange(of: searchText) {
+                Task {
+                    if searchText.isEmpty {
+                        viewModel.movies.removeAll()
+                        await viewModel.loadMovies(1)
+                    } else if searchText.count >= 3 {
+                        await viewModel.searchMovies(searchText)
+                    }
+                }
             }
             .task {
                 if viewModel.isLoading {
@@ -73,6 +86,7 @@ struct HomeView: View {
             } message: {
                 Text(viewModel.errorMessage)
             }
+            
             
             if viewModel.isLoading {
                 HStack{

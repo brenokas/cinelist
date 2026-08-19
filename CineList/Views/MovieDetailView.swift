@@ -30,35 +30,51 @@ struct MovieDetailView: View {
             VStack(spacing: 10) {
                 ZStack {
                     GeometryReader { geometry in
-                        AsyncImage(
-                            url: URL(
-                                string: "https://image.tmdb.org/t/p/w1280\(movie.backdrop_path)"
-                            )
-                        ) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        } placeholder: {
-                            ProgressView()
+                        if let movieBackdrop = movie.backdrop_path {
+                            AsyncImage(
+                                url: URL(
+                                    string: "https://image.tmdb.org/t/p/w1280\(movieBackdrop)"
+                                )
+                            ) { image in
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                            } placeholder: {
+                                ProgressView()
+                            }
+                            .frame(width: geometry.size.width, height: 300)
+                            .clipped()
+                        } else {
+                            Image(systemName: "film")
+                                .frame(width: geometry.size.width, height: 300)
+                                .clipped()
                         }
-                        .frame(width: geometry.size.width, height: 300)
-                        .clipped()
+                        
                     }
                     .frame(height: 300)
                     
-                    AsyncImage(
-                        url: URL(string: "https://image.tmdb.org/t/p/w200\(movie.poster_path)")) {
-                            image in
-                            image
-                                .resizable()
-                                .scaledToFit()
-                        } placeholder: {
-                            ProgressView()
-                        }
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                        .frame(width: 100, height: 200)
-                        .shadow(radius: 5)
-                        .offset(y:130)
+                    if let moviePoster = movie.poster_path {
+                        AsyncImage(
+                            url: URL(string: "https://image.tmdb.org/t/p/w200\(moviePoster)")) {
+                                image in
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                            } placeholder: {
+                                ProgressView()
+                            }
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                            .frame(width: 100, height: 200)
+                            .shadow(radius: 5)
+                            .offset(y:130)
+                    } else {
+                        Image(systemName: "film")
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                            .frame(width: 100, height: 200)
+                            .shadow(radius: 5)
+                            .offset(y:130)
+                    }
+                    
                 }
                 .padding(.bottom, 60)
                     
@@ -68,22 +84,47 @@ struct MovieDetailView: View {
                     .padding(.top, 10)
                 
                 HStack (spacing: 30){
-                    Text(formatDate(movie.release_date))
-                        .font(.headline)
-                        .foregroundStyle(.primary)
+                    if let releaseDate = movie.release_date {
+                        if releaseDate.isEmpty {
+                            Text("Release date not available")
+                                .font(.headline)
+                                .foregroundStyle(.secondary)
+                        }
+                        Text(formatDate(releaseDate))
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+                    } else {
+                        Text("Release date not available")
+                            .font(.headline)
+                            .foregroundStyle(.secondary)
+                    }
+                    
                 
                     HStack(spacing: 3){
                         Image(systemName:"star.fill")
                             .foregroundStyle(.yellow)
                         
-                        Text((movie.vote_average/2)
-                            .formatted(.number.precision(.fractionLength(1))))
-                            .font(.headline)
-                            .foregroundStyle(.primary)
+                        if let voteAverage = movie.vote_average {
+                            Text((voteAverage/2)
+                                .formatted(.number.precision(.fractionLength(1))))
+                                .font(.headline)
+                                .foregroundStyle(.primary)
+                        } else {
+                            Text("0,0")
+                                .font(.headline)
+                                .foregroundStyle(.primary)
+                        }
                         
-                        Text("(\(movie.vote_count))")
-                            .foregroundStyle(Color(.secondaryLabel))
-                            .textScale(.secondary)
+                        if let voteCount = movie.vote_count {
+                            Text("(\(voteCount))")
+                                .foregroundStyle(Color(.secondaryLabel))
+                                .textScale(.secondary)
+                        } else {
+                            Text("0,0")
+                                .foregroundStyle(Color(.secondaryLabel))
+                                .textScale(.secondary)
+                        }
+                        
                         
                     }
                     

@@ -8,16 +8,6 @@
 import SwiftUI
 import CachedAsyncImage
 
-extension URLCache {
-    static let imageCache: URLCache = {
-        URLCache(
-            memoryCapacity: 50 * 1024 * 1024,
-            diskCapacity: 200 * 1024 * 1024,
-            diskPath: "image-cache"
-        )
-    }()
-}
-
 struct FavoritesView: View {
     @EnvironmentObject var favoritesViewModel: FavoritesViewModel
     

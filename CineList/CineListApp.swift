@@ -9,9 +9,22 @@ import SwiftUI
 
 @main
 struct CineListApp: App {
+    
+    @StateObject private var favoritesViewModel = FavoritesViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            TabView {
+                HomeView()
+                    .tabItem {
+                        Label("Home", systemImage: "house")
+                    }
+                FavoritesView()
+                    .tabItem {
+                        Label("Favorites", systemImage: "heart.fill")
+                    }
+            }
+            .environmentObject(favoritesViewModel)
         }
     }
 }

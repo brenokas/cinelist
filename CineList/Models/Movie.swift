@@ -5,7 +5,7 @@
 //  Created by breno.farias on 18/08/26.
 //
 
-struct Movie: Decodable {
+struct Movie: Decodable, Identifiable, Hashable {
     let id: Int
     let backdrop_path: String?
     let title: String

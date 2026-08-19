@@ -10,6 +10,8 @@ import SwiftUI
 struct MovieDetailView: View {
     let movie: Movie
     
+    @EnvironmentObject var favoritesViewModel: FavoritesViewModel
+    
     func formatDate(_ dateString: String) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
@@ -77,11 +79,16 @@ struct MovieDetailView: View {
                     
                 }
                 .padding(.bottom, 60)
+                
+                HStack {
+                    Text(movie.title)
+                        .font(.title)
+                        .bold()
+                        .padding(.top, 10)
                     
-                Text(movie.title)
-                    .font(.title)
-                    .bold()
-                    .padding(.top, 10)
+                    Image(systemName: "heart")
+                        
+                }
                 
                 HStack (spacing: 30){
                     if let releaseDate = movie.release_date {

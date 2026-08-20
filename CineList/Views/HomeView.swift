@@ -9,13 +9,31 @@ import SwiftUI
 import CachedAsyncImage
 
 struct HomeView: View {
+    @Binding var languageSelected: Languages
     @State private var searchText = ""
     @StateObject private var viewModel = HomeViewModel()
-
+    
+    private func reloadMovies() {
+        Task {
+            if searchText.isEmpty {
+                viewModel.movies.removeAll()
+                await viewModel.loadMovies(1, languageSelected.rawValue)
+            } else if searchText.count >= 3 {
+                await viewModel.searchMovies(searchText, languageSelected.rawValue)
+            }
+        }
+    }
+    
     var body: some View {
         ZStack {
             NavigationStack {
                 List() {
+                    Picker("Language", selection: $languageSelected) {
+                        ForEach(Languages.allCases, id:\.self) { language in
+                            Text(LocalizedStringKey(language.displayName))
+                                .tag(language)
+                        }
+                    }
                     Section("Popular Movies") {
                         ForEach(viewModel.movies, id: \.id) { movie in
                             NavigationLink {
@@ -83,21 +101,17 @@ struct HomeView: View {
                 .searchable(text: $searchText, placement: .navigationBarDrawer)
             }
             .onChange(of: searchText) {
-                Task {
-                    if searchText.isEmpty {
-                        viewModel.movies.removeAll()
-                        await viewModel.loadMovies(1)
-                    } else if searchText.count >= 3 {
-                        await viewModel.searchMovies(searchText)
-                    }
-                }
+                reloadMovies()
+            }
+            .onChange(of: languageSelected) {
+                reloadMovies()
             }
             .task {
                 if viewModel.isLoading {
                     return
                 }
                 
-                await viewModel.loadMovies(1)
+                await viewModel.loadMovies(1, languageSelected.rawValue)
             }
             .alert("Error", isPresented: $viewModel.showError) {
                 
@@ -119,5 +133,7 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    @Previewable @State var languageSelected = Languages.en
+
+    HomeView(languageSelected: $languageSelected)
 }

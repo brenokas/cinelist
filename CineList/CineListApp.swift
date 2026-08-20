@@ -9,13 +9,14 @@ import SwiftUI
 
 @main
 struct CineListApp: App {
-    
     @StateObject private var favoritesViewModel = FavoritesViewModel()
+    @State private var languageSelected = Languages.en
+
     
     var body: some Scene {
         WindowGroup {
             TabView {
-                HomeView()
+                HomeView(languageSelected: $languageSelected)
                     .tabItem {
                         Label("Home", systemImage: "house")
                     }
@@ -25,6 +26,7 @@ struct CineListApp: App {
                     }
             }
             .environmentObject(favoritesViewModel)
+            .environment(\.locale, Locale(identifier: languageSelected.rawValue))
         }
     }
 }

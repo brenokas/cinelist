@@ -17,10 +17,10 @@ class HomeViewModel: ObservableObject {
     
     private let service = MovieService()
     
-    func loadMovies(_ page: Int) async {
+    func loadMovies(_ page: Int, _ language: String) async {
         isLoading = true
         do {
-            let response = try await service.getMovies(page)
+            let response = try await service.getMovies(page, language)
             
             if page == 1 {
                 movies = response.results
@@ -36,11 +36,11 @@ class HomeViewModel: ObservableObject {
         isLoading = false
     }
     
-    func searchMovies(_ query: String) async {
+    func searchMovies(_ query: String, _ language: String) async {
         isLoading = true
         
         do {
-            let response = try await service.searchMovies(query)
+            let response = try await service.searchMovies(query, language)
             movies = response.results
         } catch {
             errorMessage = error.localizedDescription

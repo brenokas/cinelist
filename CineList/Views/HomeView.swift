@@ -79,6 +79,7 @@ struct HomeView: View {
                     }
                 }
                 .navigationTitle("CineList")
+                .navigationBarTitleDisplayMode(.inline)
                 .searchable(text: $searchText, placement: .navigationBarDrawer)
             }
             .onChange(of: searchText) {

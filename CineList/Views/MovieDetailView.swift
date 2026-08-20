@@ -36,7 +36,7 @@ struct MovieDetailView: View {
                         if let movieBackdrop = movie.backdrop_path {
                             CachedAsyncImage(
                                 url: URL(
-                                    string: "https://image.tmdb.org/t/p/w500\(movieBackdrop)"
+                                    string: "https://image.tmdb.org/t/p/w1280\(movieBackdrop)"
                                 ),
                                 urlCache: .imageCache
                             ) { phase in
@@ -67,6 +67,18 @@ struct MovieDetailView: View {
                         
                     }
                     .frame(height: 300)
+                    
+                    LinearGradient(
+                            stops: [
+                                .init(color: .clear, location: 0),
+                                .init(color: Color(.systemBackground).opacity(0.85), location: 0.7),
+                                .init(color: Color(.systemBackground), location: 1)
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                        .frame(height: 140)
+                        .offset(y: 85)
                     
                     if let moviePoster = movie.poster_path {
                         CachedAsyncImage(

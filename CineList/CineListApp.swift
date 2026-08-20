@@ -20,7 +20,7 @@ struct CineListApp: App {
                     .tabItem {
                         Label("Home", systemImage: "house")
                     }
-                FavoritesView()
+                FavoritesView(languageSelected: $languageSelected)
                     .tabItem {
                         Label("Favorites", systemImage: "heart.fill")
                     }

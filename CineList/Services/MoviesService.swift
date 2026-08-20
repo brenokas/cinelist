@@ -24,7 +24,7 @@ class MovieService {
             URLQueryItem(name: "page", value: String(page)),
             URLQueryItem(name: "language", value: language)
         ]
-
+        
         guard let url = components.url else {
             throw URLError(.badURL)
         }
@@ -34,6 +34,22 @@ class MovieService {
         
         return try JSONDecoder().decode(MovieResponse.self, from: data)
     }
+    
+    func getMovieByID (_ id: Int, _ language: String) async throws -> Movie {
+        var components = URLComponents(string: "https://api.themoviedb.org/3/movie/\(id)")!
+        components.queryItems = [
+            URLQueryItem(name: "language", value: language)
+        ]
+        
+        guard let url = components.url else {
+            throw URLError(.badURL)
+        }
+        
+        let (data, _) = try await URLSession.shared.data(for: doRequest(url))
+        return try JSONDecoder().decode(Movie.self, from: data)
+    }
+
+    
     
     func searchMovies(_ movieName: String, _ language: String) async throws -> MovieResponse {
         var components = URLComponents(string: "https://api.themoviedb.org/3/search/movie")!

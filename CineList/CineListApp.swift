@@ -54,6 +54,7 @@ struct CineListApp: App {
                     }
                     .tag("settings")
             }
+            .id(selectedLanguage)
             .environmentObject(favoritesViewModel)
             .environmentObject(settingsViewModel)
             .environment(\.locale,

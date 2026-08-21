@@ -11,7 +11,7 @@ import SwiftUI
 struct CineListApp: App {
     @StateObject private var favoritesViewModel = FavoritesViewModel()
     @StateObject private var settingsViewModel = SettingsViewModel()
-    @State private var languageSelected = Languages.en
+    @AppStorage("selectedLanguage") private var selectedLanguage = Languages.en.rawValue
     
     @State private var selectedTab = "home"
     
@@ -26,20 +26,29 @@ struct CineListApp: App {
         }
     }
     
+    private var languageSelected: Binding<Languages> {
+        Binding(
+            get: {
+                Languages(rawValue: selectedLanguage) ?? .en
+            }, set: {
+                selectedLanguage = $0.rawValue
+        })
+    }
+    
     var body: some Scene {
         WindowGroup {
             TabView(selection: $selectedTab){
-                FavoritesView(languageSelected: $languageSelected)
+                FavoritesView(languageSelected: languageSelected)
                     .tabItem {
                         Label("Favorites", systemImage: "heart.fill")
                     }
                     .tag("favorites")
-                HomeView(languageSelected: $languageSelected)
+                HomeView(languageSelected: languageSelected)
                     .tabItem {
                         Label("Home", systemImage: "house")
                     }
                     .tag("home")
-                SettingsView(languageSelected: $languageSelected)
+                SettingsView(languageSelected: languageSelected)
                     .tabItem {
                         Label("Settings", systemImage: "gear")
                     }
@@ -47,7 +56,8 @@ struct CineListApp: App {
             }
             .environmentObject(favoritesViewModel)
             .environmentObject(settingsViewModel)
-            .environment(\.locale, Locale(identifier: languageSelected.rawValue))
+            .environment(\.locale,
+                          Locale(identifier: Languages(rawValue: selectedLanguage)?.rawValue ?? Languages.en.rawValue))
             .preferredColorScheme(colorScheme)
         }
     }

@@ -28,12 +28,6 @@ struct HomeView: View {
         ZStack {
             NavigationStack {
                 List() {
-                    Picker("Language", selection: $languageSelected) {
-                        ForEach(Languages.allCases, id:\.self) { language in
-                            Text(LocalizedStringKey(language.displayName))
-                                .tag(language)
-                        }
-                    }
                     Section("Popular Movies") {
                         ForEach(viewModel.movies, id: \.id) { movie in
                             NavigationLink {

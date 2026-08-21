@@ -13,6 +13,8 @@ struct CineListApp: App {
     @StateObject private var settingsViewModel = SettingsViewModel()
     @State private var languageSelected = Languages.en
     
+    @State private var selectedTab = "home"
+    
     private var colorScheme: ColorScheme? {
         switch settingsViewModel.selectedTheme {
         case .system:
@@ -26,19 +28,22 @@ struct CineListApp: App {
     
     var body: some Scene {
         WindowGroup {
-            TabView {
-                HomeView(languageSelected: $languageSelected)
-                    .tabItem {
-                        Label("Home", systemImage: "house")
-                    }
+            TabView(selection: $selectedTab){
                 FavoritesView(languageSelected: $languageSelected)
                     .tabItem {
                         Label("Favorites", systemImage: "heart.fill")
                     }
+                    .tag("favorites")
+                HomeView(languageSelected: $languageSelected)
+                    .tabItem {
+                        Label("Home", systemImage: "house")
+                    }
+                    .tag("home")
                 SettingsView(languageSelected: $languageSelected)
                     .tabItem {
                         Label("Settings", systemImage: "gear")
                     }
+                    .tag("settings")
             }
             .environmentObject(favoritesViewModel)
             .environmentObject(settingsViewModel)

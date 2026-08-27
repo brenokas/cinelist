@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import CachedAsyncImage
 
 struct HomeView: View {
     @Binding var languageSelected: Languages
@@ -33,59 +32,7 @@ struct HomeView: View {
                             NavigationLink {
                                 MovieDetailView(movie: movie)
                             } label: {
-                                HStack {
-                                    if let posterPath = movie.poster_path {
-                                        CachedAsyncImage(
-                                            url: URL(string: "https://image.tmdb.org/t/p/w200\(posterPath)"),
-                                            urlCache: .imageCache
-                                        ) { phase in
-                                            switch phase {
-                                            case .empty:
-                                                ProgressView()
-                                            case .success(let image):
-                                                image
-                                                    .resizable()
-                                                    .scaledToFill()
-                                            case .failure:
-                                                Image(systemName: "film")
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .padding(25)
-                                                    .foregroundStyle(.secondary)
-                                            @unknown default:
-                                                EmptyView()
-                                            }
-                                        }
-                                        .frame(width: 100, height: 150)
-                                        .clipped()
-                                        .clipShape(RoundedRectangle(cornerRadius:5))
-                                        .border(Color.gray, width: 0.5)
-                                    } else {
-                                        Image(systemName: "film")
-                                            .frame(width: 100, height: 150)
-                                            .clipShape(RoundedRectangle(cornerRadius:5))
-                                            .border(Color.gray, width: 0.5)
-                                    }
-                                    
-                                    VStack(alignment: .leading){
-                                        Text(movie.title)
-                                            .font(.headline)
-                                            .foregroundStyle(.primary)
-                                        HStack(spacing:3){
-                                            Image(systemName:"star.fill").foregroundStyle(.yellow)
-                                            
-                                            if let voteAverage = movie.vote_average {
-                                                Text((voteAverage/2)
-                                                    .formatted(.number.precision(.fractionLength(1))))
-                                            } else {
-                                                Text("(0)")
-                                            }
-                                            
-                                        }
-                                    }
-                                    
-                                }
-                                
+                                MovieListRow(movie: movie)
                             }
                         }
                     }
